@@ -17,7 +17,7 @@ Alien > Alpha6*
 Alpha6* > Fire
 
 AVISO
-Antes dos testes com todo mundo deixando o pau quebrar, vencer esses 3 por 3x0.
+Antes dos testes com todo mundo deixando o pau quebrar, vencer esses 3 por 10x0.
 
 EMAIL DO BRUNO
 bruno.silva.cunha@hotmail.com
