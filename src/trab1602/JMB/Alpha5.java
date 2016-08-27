@@ -18,7 +18,7 @@ import java.awt.*;
  * <p/>
  * Basedo no robô Crazy por Mathew A. Nelson e Flemming N. Larsen.
  * <p/>
- * Após os testes, esse será o robô final.
+ * Após os testes, esse será o robô final com o nome de Alpha.
  *
  * @author Mathew A. Nelson (original)
  * @author Flemming N. Larsen (contributor)
