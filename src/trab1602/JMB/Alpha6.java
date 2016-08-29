@@ -14,6 +14,7 @@ import robocode.ScannedRobotEvent;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 import java.awt.*;
+import robocode.HitWallEvent;
 
 /**
  * Fire - a sample robot by Mathew Nelson, and maintained.
@@ -37,6 +38,7 @@ public class Alpha6 extends Robot {
         setRadarColor(new Color(236, 64, 70));
         setBulletColor(new Color(255, 236, 108));
         setScanColor(new Color(53, 68, 103));
+        System.out.println("Esse é um Robot. Energy inicial: " + getEnergy());
 
         // Spin the gun around slowly... forever
         while (true) {
@@ -51,10 +53,12 @@ public class Alpha6 extends Robot {
         // If the other robot is close by, and we have plenty of life,
         // fire hard!
         if (e.getDistance() < 50 && getEnergy() > 50) {
-            fire(100.00);
+            fire(500.00);
+            System.out.println("Fire! Energy: " + getEnergy());
         } // otherwise, fire 1.
         else {
-            fire(100.00);
+            fire(500.00);
+            System.out.println("Fire! Energy: " + getEnergy());
         }
         // Call scan again, before we turn the gun
         scan();
@@ -64,6 +68,7 @@ public class Alpha6 extends Robot {
      * onHitByBullet: Turn perpendicular to the bullet, and move a bit.
      */
     public void onHitByBullet(HitByBulletEvent e) {
+        System.out.println("Ouch! I get shot! Energy: " + getEnergy());
         turnRight(normalRelativeAngleDegrees(90 - (getHeading() - e.getHeading())));
 
         ahead(dist);
@@ -79,5 +84,13 @@ public class Alpha6 extends Robot {
 
         turnGunRight(turnGunAmt);
         fire(3);
+        System.out.println("Hit robot! Energy: " + getEnergy());
+    }
+
+    /**
+     * onHitWall: Handle collision with wall.
+     */
+    public void onHitWall(HitWallEvent e) {
+        System.out.println("Hit wall! Energy: " + getEnergy());
     }
 }

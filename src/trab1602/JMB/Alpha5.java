@@ -9,6 +9,7 @@ package trab1602.JMB;
 
 import robocode.*;
 import java.awt.*;
+import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 /**
  * Alpha - ai ai ai ai ai!
@@ -38,6 +39,7 @@ public class Alpha5 extends AdvancedRobot {
         setRadarColor(new Color(236, 64, 70));
         setBulletColor(new Color(255, 236, 108));
         setScanColor(new Color(53, 68, 103));
+        System.out.println("Esse é um AdvancedRobot. Energy inicial: " + getEnergy());
 
         // Loop forever
         while (true) {
@@ -106,5 +108,12 @@ public class Alpha5 extends AdvancedRobot {
             reverseDirection();
         }
         System.out.println("Hit robot! Energy: " + getEnergy());
+    }
+    
+    /**
+     * onHitByBullet: Turn perpendicular to the bullet, and move a bit.
+     */
+    public void onHitByBullet(HitByBulletEvent e) {
+        System.out.println("Ouch! I get shot! Energy: " + getEnergy());
     }
 }

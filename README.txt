@@ -8,7 +8,12 @@ REQUISITOS
 quando atingido, rastrear quem atirou e atirar de volta
 rastreou? atirou!
 tem que ter o radar móvel
-andar como o Crazy, sem bater nas paredes (usar algo como moveAmount = Math.max(getBattleFieldWidth(), getBattleFieldHeight()); )
+andar como o Crazy, sem bater nas paredes (usar algo como "wall avoidance" ou parar quando ver uma parede e virar pra um lado.)
+
+CARACTERÍSTICAS
+Quando um AdvancedRobot (ex: Alpha5) hita uma parece, ele tem um dano de 3pts, descontados do energy.
+Cada vez que atira, a arma esquenta; se esquentar demais, tem desconto no energy.
+
 
 ARQUI-RIVAIS
 Walls > Alpha6*
