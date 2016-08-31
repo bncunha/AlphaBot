@@ -28,7 +28,7 @@ import static robocode.util.Utils.normalRelativeAngleDegrees;
 public class Alpha5 extends AdvancedRobot {
 
     boolean movingForward;
-
+    
     /**
      * run: Crazy's main run function
      */
@@ -39,16 +39,86 @@ public class Alpha5 extends AdvancedRobot {
         setRadarColor(new Color(236, 64, 70));
         setBulletColor(new Color(255, 236, 108));
         setScanColor(new Color(53, 68, 103));
-        System.out.println("AI AI AI AI AI!");
         System.out.println("Esse é um AdvancedRobot. Energy inicial: " + getEnergy());
-
+        
+        //variaveis para determinar a posição do robo (x,y) no campo de batalha
+        double xPos; 
+        double yPos;
+        
+        // variaveis que pegam as dimensões do campo de batalha
+        double alturaCampo = getBattleFieldHeight();
+        double larguraCampo = getBattleFieldWidth();
+        
+        // uma porcentagem para determinar o quanto perto da borda para o
+        // tank desviar. Determinei 19% pois ele faz uma curva muito aberta.
+        double desviar = 0.19 * Math.max(alturaCampo, larguraCampo); // desviar 20% de tocar na borda
         // Loop forever
         while (true) {
             // Tell the game we will want to move ahead 40000 -- some large number
             setAhead(40000);
+            
+            xPos = getX();
+            yPos = getY();
+            execute();
+            //muito perto do lado direito
+            if (xPos > larguraCampo - desviar){
+                System.out.println(this.getHeading());  
+                // verifica o angulo que está se aproximando do lado direito
+                // se estiver subindo na diagonal vai depender de sua posição no campo
+                if (this.getHeading() < 90){                     
+                    if (yPos > alturaCampo - 1){ // se estiver bem proximo da quina supeior direta
+                        //retorna
+                        stop(); 
+                        setTurnRight(150);
+                        waitFor (new TurnCompleteCondition(this));
+                        ahead(50);
+                    }                    
+                    else{
+                        // se estiver abaixo da metade do campo
+                        // dá um drift para esquerda
+                        if (yPos < alturaCampo/2){
+                            setTurnLeft(90);
+                            waitFor (new TurnCompleteCondition(this));
+                        }
+                        // se estiver acima da metade do campo
+                        else{
+                            //retorna
+                            stop();
+                            setTurnRight(180);
+                            waitFor (new TurnCompleteCondition(this));
+                        }
+                    }
+                }
+                // Agora, se estiver descendo na diagonal vai depender de sua posição no campo
+                else if (this.getHeading() < 180 && this.getHeading() > 90){
+                    // se estiver bem proximo do canto inferior direito
+                    if (yPos < 2){
+                        //retorna
+                        stop();
+                        setTurnLeft (170);
+                        waitFor (new TurnCompleteCondition(this));
+                        ahead(50);                        
+                    }
+                    else{
+                        // se estiver acima da metade do campo
+                        // da um drift para direita
+                        if (yPos > alturaCampo/2){
+                            setTurnRight(90);
+                            waitFor (new TurnCompleteCondition(this));
+                        }
+                        // se estiver abaixo da metade do campo
+                        // retorna
+                        else{                            
+                            stop();
+                            setTurnLeft(180);
+                            waitFor (new TurnCompleteCondition(this));
+                        }
+                    }
+                }
+            }
             movingForward = true;
             // Tell the game we will want to turn right 90
-            setTurnRight(90);
+            /*setTurnRight(90);
             // At this point, we have indicated to the game that *when we do something*,
             // we will want to move ahead and turn right.  That's what "set" means.
             // It is important to realize we have not done anything yet!
@@ -66,7 +136,7 @@ public class Alpha5 extends AdvancedRobot {
             setTurnRight(180);
             // .. and wait for that turn to finish.
             waitFor(new TurnCompleteCondition(this));
-            // then back to the top to do it all again
+            // then back to the top to do it all again*/
         }
     }
 
