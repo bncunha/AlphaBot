@@ -23,6 +23,7 @@ Alpha6* > Fire
 
 AVISO
 Antes dos testes com todo mundo deixando o pau quebrar, vencer esses 3 por 10x0.
+Somente os arquivos fonte devem ser commitados!!!!!
 
 EMAIL DO BRUNO
 bruno.silva.cunha@hotmail.com
