@@ -1,0 +1,37 @@
+cd 'pasta'   											// entra na pasta especificada
+mkdir													// cria novo diretório
+rm														// deletar um arquivo
+-rm														// deleta um diretório com tudo dentro
+ls 														// visualiza pastas no diretório
+ls - a 													// visualiza arquivos ocultos
+mv 'Diretório destino'									// mover arquivo
+
+diff -u arquivo1 arquivo2								// ver diferenças entre arquivos
+
+git log 												//ver todos os commits
+git clone												// clona um repositório
+git init												// inicia novo repositório
+git status												// mostra os arquivos alterados desde o ultimo commit
+git add (arquivo)										// prepara quais arquivos farão parte do proximo commit
+git commit -m "Mensagem"								// adiciona um novo commit dos arquivos ADD, com msg dita
+git reset (arquivo)										// retira um arquivo que você não deseja no commit.
+git diff 												// compara woring directory e staging area
+git --staged											// compara staging area e commit 1 (o commit mais recente)
+git diff commit1 commit2								// compara dois commits
+
+git branch												// mostra todos os branchs do projeto
+git branch "nome"										// cria novo branch com o nome especificado
+git branch -d "name_branch"								// deleta o rótulo do branch, nao os seus commits
+
+git merge "branch2"										// irá mesclar o branch que vc está com o branch2, LEMBRE DE USAR 'git chekout' antes
+git merge --abort										// Restaure os arquivos ao estado em que se encontravam antes de você começar a mesclagem
+
+git remote add 'origin' 'url'							// seleciona o repositório com um novo nome (Origin), para a URL do GitHub
+git push -u 'origin' 'master'							// envio o repositorio oficial (master) para o novo nome 'origin'
+git pull 'origin' 'master'								// envia do GitHub para a maquina local
+
+git config --global color.ui auto  						// obtém saída colorida
+git checkou	'ID COMMIT'									// volta para o commit informado
+git config --globar core.editor "'diretório'" -n -w" 	// define editor padrão; -n (abre em nova janela) -w (git espera fechar)
+git config --global push.default upstream
+git config --global merge.conflictstyle diff3
