@@ -9,6 +9,7 @@ package trab1602.JMB;
 
 import robocode.*;
 import java.awt.*;
+import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 /**
  * Alpha - ai ai ai ai ai!
@@ -18,7 +19,7 @@ import java.awt.*;
  * <p/>
  * Basedo no robô Crazy por Mathew A. Nelson e Flemming N. Larsen.
  * <p/>
- * Após os testes, esse será o robô final.
+ * Após os testes, esse será o robô final com o nome de Alpha.
  *
  * @author Mathew A. Nelson (original)
  * @author Flemming N. Larsen (contributor)
@@ -38,6 +39,8 @@ public class Alpha5 extends AdvancedRobot {
         setRadarColor(new Color(236, 64, 70));
         setBulletColor(new Color(255, 236, 108));
         setScanColor(new Color(53, 68, 103));
+        System.out.println("AI AI AI AI AI!");
+        System.out.println("Esse é um AdvancedRobot. Energy inicial: " + getEnergy());
 
         // Loop forever
         while (true) {
@@ -106,5 +109,12 @@ public class Alpha5 extends AdvancedRobot {
             reverseDirection();
         }
         System.out.println("Hit robot! Energy: " + getEnergy());
+    }
+    
+    /**
+     * onHitByBullet: Turn perpendicular to the bullet, and move a bit.
+     */
+    public void onHitByBullet(HitByBulletEvent e) {
+        System.out.println("Ouch! I get shot! Energy: " + getEnergy());
     }
 }
