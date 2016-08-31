@@ -39,6 +39,7 @@ public class Alpha5 extends AdvancedRobot {
         setRadarColor(new Color(236, 64, 70));
         setBulletColor(new Color(255, 236, 108));
         setScanColor(new Color(53, 68, 103));
+        System.out.println("AI AI AI AI AI!");
         System.out.println("Esse é um AdvancedRobot. Energy inicial: " + getEnergy());
 
         // Loop forever
