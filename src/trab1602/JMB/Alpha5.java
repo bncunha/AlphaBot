@@ -60,9 +60,14 @@ public class Alpha5 extends AdvancedRobot {
             xPos = getX();
             yPos = getY();
             execute();
-            //muito perto do lado direito
+            //muito perto do lado direito do mapa
             if (xPos > larguraCampo - desviar){
+                // função para desviar do lado direito
                 desviarDireita(yPos, xPos, alturaCampo, larguraCampo);
+            }
+            //muito perto do lado esquerdo do mapa
+            else if (xPos < desviar){
+                desviarEsquerda (yPos, xPos, alturaCampo, larguraCampo);
             }
             movingForward = true;
             // Tell the game we will want to turn right 90
@@ -97,8 +102,62 @@ public class Alpha5 extends AdvancedRobot {
         System.out.println("Hit wall! Energy: " + getEnergy());
     }
     
+    public void desviarEsquerda (double yPos, double xPos, double alturaCampo, double larguraCampo){
+        // verifica o angulo que está se aproximando do lado direito
+        // se estiver subindo na diagonal vai depender de sua posição no campo
+        if (this.getHeading() > 270 && this.getHeading() < 360){                     
+            if (yPos > alturaCampo - 1){ // se estiver bem proximo da quina supeior esquerda
+                //retorna
+                stop(); 
+                setTurnRight(150);
+                waitFor (new TurnCompleteCondition(this));
+                ahead(50);
+            }                    
+            else{
+                // se estiver abaixo da metade do campo
+                // dá um drift para direita
+                if (yPos < alturaCampo/2){
+                    setTurnRight(90);
+                    waitFor (new TurnCompleteCondition(this));
+                }
+                // se estiver acima da metade do campo
+                else{
+                    //retorna
+                    stop();
+                    setTurnLeft(180);
+                    waitFor (new TurnCompleteCondition(this));
+                }
+            }
+        }
+        // Agora, se estiver descendo na diagonal vai depender de sua posição no campo
+        else if (this.getHeading() > 180 && this.getHeading() < 270){
+            // se estiver bem proximo do canto inferior esquerdo
+            if (yPos < 2){
+                //retorna
+                stop();
+                setTurnRight(170);
+                waitFor (new TurnCompleteCondition(this));
+                ahead(50);                        
+            }
+            else{
+                // se estiver acima da metade do campo
+                // da um drift para esquerda
+                if (yPos > alturaCampo/2){
+                    setTurnLeft(110);
+                    waitFor (new TurnCompleteCondition(this));
+                }
+                // se estiver abaixo da metade do campo
+                // retorna
+                else{                            
+                    stop();
+                    setTurnRight(150);
+                    waitFor (new TurnCompleteCondition(this));
+                }
+            }
+        }                
+    }
+    
     public void desviarDireita(double yPos, double xPos, double alturaCampo, double larguraCampo){
-        System.out.println(this.getHeading());  
         // verifica o angulo que está se aproximando do lado direito
         // se estiver subindo na diagonal vai depender de sua posição no campo
         if (this.getHeading() < 90){                     
@@ -120,7 +179,7 @@ public class Alpha5 extends AdvancedRobot {
                 else{
                     //retorna
                     stop();
-                    setTurnRight(180);
+                    setTurnRight(170);
                     waitFor (new TurnCompleteCondition(this));
                 }
             }
@@ -146,7 +205,7 @@ public class Alpha5 extends AdvancedRobot {
                 // retorna
                 else{                            
                     stop();
-                    setTurnLeft(180);
+                    setTurnLeft(160);
                     waitFor (new TurnCompleteCondition(this));
                 }
             }
