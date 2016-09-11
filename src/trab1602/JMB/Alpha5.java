@@ -9,6 +9,7 @@ package trab1602.JMB;
 
 import robocode.*;
 import java.awt.*;
+import java.util.Random;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 /**
@@ -28,6 +29,8 @@ import static robocode.util.Utils.normalRelativeAngleDegrees;
 public class Alpha5 extends AdvancedRobot {
 
     boolean movingForward;
+    boolean virandoDireita; // TRUE virou para direita, FALSE virou para esquerda
+    Random r = new Random();
     
     /**
      * run: Crazy's main run function
@@ -41,6 +44,8 @@ public class Alpha5 extends AdvancedRobot {
         setScanColor(new Color(53, 68, 103));
         System.out.println("Esse é um AdvancedRobot. Energy inicial: " + getEnergy());
         
+        virandoDireita = true; //seta a variavel
+        
         //variaveis para determinar a posição do robo (x,y) no campo de batalha
         double xPos; 
         double yPos;
@@ -51,7 +56,7 @@ public class Alpha5 extends AdvancedRobot {
         
         // uma porcentagem para determinar o quanto perto da borda para o
         // tank desviar. Determinei 19% pois ele faz uma curva muito aberta.
-        double desviar = 0.19 * Math.max(alturaCampo, larguraCampo); // desviar 20% de tocar na borda
+        double desviar = 0.15 * Math.max(alturaCampo, larguraCampo); // desviar 20% de tocar na borda
         // Loop forever
         while (true) {
             // Tell the game we will want to move ahead 40000 -- some large number
@@ -60,15 +65,37 @@ public class Alpha5 extends AdvancedRobot {
             xPos = getX();
             yPos = getY();
             execute();
-            //muito perto do lado direito do mapa
-            if (xPos > larguraCampo - desviar){
-                // função para desviar do lado direito
-                desviarDireita(yPos, xPos, alturaCampo, larguraCampo);
+           
+            System.out.println("Posição: (" + xPos + ", " + yPos + ")" );
+            // muito perto do lado direito
+            if (xPos > larguraCampo - desviar){                
+                retornar();                
             }
             //muito perto do lado esquerdo do mapa
-            else if (xPos < desviar){
-                desviarEsquerda (yPos, xPos, alturaCampo, larguraCampo);
+            else if (xPos < desviar){               
+                retornar();
             }
+            //muito perto do topo
+            else if (yPos > alturaCampo - desviar){               
+                retornar();
+            }
+            //muito perto do bot
+            else if (yPos < desviar){                
+                retornar();
+            }
+            else{
+                if (virandoDireita == false){//significa q a ultima curva foi para esquerda
+                    setTurnRight(r.nextInt(50));
+                    waitFor(new TurnCompleteCondition(this));
+                    virandoDireita = true;
+                }
+                else{//significa q a ultima curva foi para direita
+                    setTurnLeft(r.nextInt(50));
+                    waitFor(new TurnCompleteCondition(this));
+                    virandoDireita = false;
+                }
+            }
+            
             movingForward = true;
             // Tell the game we will want to turn right 90
             /*setTurnRight(90);
@@ -97,120 +124,17 @@ public class Alpha5 extends AdvancedRobot {
      * onHitWall: Handle collision with wall.
      */
     public void onHitWall(HitWallEvent e) {
-        // Bounce off!
-        reverseDirection();
+        // Bounce off!      
+        back(70);
+        //reverseDirection();
         System.out.println("Hit wall! Energy: " + getEnergy());
     }
-    
-    public void desviarEsquerda (double yPos, double xPos, double alturaCampo, double larguraCampo){
-        // verifica o angulo que está se aproximando do lado direito
-        // se estiver subindo na diagonal vai depender de sua posição no campo
-        if (this.getHeading() > 270 && this.getHeading() < 360){                     
-            if (yPos > alturaCampo - 1){ // se estiver bem proximo da quina supeior esquerda
-                //retorna
-                stop(); 
-                setTurnRight(150);
-                waitFor (new TurnCompleteCondition(this));
-                ahead(50);
-            }                    
-            else{
-                // se estiver abaixo da metade do campo
-                // dá um drift para direita
-                if (yPos < alturaCampo/2){
-                    setTurnRight(90);
-                    waitFor (new TurnCompleteCondition(this));
-                }
-                // se estiver acima da metade do campo
-                else{
-                    //retorna
-                    stop();
-                    setTurnLeft(180);
-                    waitFor (new TurnCompleteCondition(this));
-                }
-            }
-        }
-        // Agora, se estiver descendo na diagonal vai depender de sua posição no campo
-        else if (this.getHeading() > 180 && this.getHeading() < 270){
-            // se estiver bem proximo do canto inferior esquerdo
-            if (yPos < 2){
-                //retorna
-                stop();
-                setTurnRight(170);
-                waitFor (new TurnCompleteCondition(this));
-                ahead(50);                        
-            }
-            else{
-                // se estiver acima da metade do campo
-                // da um drift para esquerda
-                if (yPos > alturaCampo/2){
-                    setTurnLeft(110);
-                    waitFor (new TurnCompleteCondition(this));
-                }
-                // se estiver abaixo da metade do campo
-                // retorna
-                else{                            
-                    stop();
-                    setTurnRight(150);
-                    waitFor (new TurnCompleteCondition(this));
-                }
-            }
-        }                
-    }
-    
-    public void desviarDireita(double yPos, double xPos, double alturaCampo, double larguraCampo){
-        // verifica o angulo que está se aproximando do lado direito
-        // se estiver subindo na diagonal vai depender de sua posição no campo
-        if (this.getHeading() < 90){                     
-            if (yPos > alturaCampo - 1){ // se estiver bem proximo da quina supeior direta
-                //retorna
-                stop(); 
-                setTurnRight(150);
-                waitFor (new TurnCompleteCondition(this));
-                ahead(50);
-            }                    
-            else{
-                // se estiver abaixo da metade do campo
-                // dá um drift para esquerda
-                if (yPos < alturaCampo/2){
-                    setTurnLeft(90);
-                    waitFor (new TurnCompleteCondition(this));
-                }
-                // se estiver acima da metade do campo
-                else{
-                    //retorna
-                    stop();
-                    setTurnRight(170);
-                    waitFor (new TurnCompleteCondition(this));
-                }
-            }
-        }
-        // Agora, se estiver descendo na diagonal vai depender de sua posição no campo
-        else if (this.getHeading() < 180 && this.getHeading() > 90){
-            // se estiver bem proximo do canto inferior direito
-            if (yPos < 2){
-                //retorna
-                stop();
-                setTurnLeft (170);
-                waitFor (new TurnCompleteCondition(this));
-                ahead(50);                        
-            }
-            else{
-                // se estiver acima da metade do campo
-                // da um drift para direita
-                if (yPos > alturaCampo/2){
-                    setTurnRight(90);
-                    waitFor (new TurnCompleteCondition(this));
-                }
-                // se estiver abaixo da metade do campo
-                // retorna
-                else{                            
-                    stop();
-                    setTurnLeft(160);
-                    waitFor (new TurnCompleteCondition(this));
-                }
-            }
-        }        
-    }
+    public void retornar(){
+        stop(); 
+        setTurnRight(120);
+        waitFor (new TurnCompleteCondition(this));
+        ahead(100);                                
+    }    
     /**
      * reverseDirection: Switch from ahead to back & vice versa
      */
