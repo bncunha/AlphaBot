@@ -36,6 +36,8 @@ public class Alpha5 extends AdvancedRobot {
      * run: Crazy's main run function
      */
     public void run() {
+        //radar, arma e corpo virarem independentemente        
+        setAdjustGunForRobotTurn(true);
         // Set colors  
         setBodyColor(new Color(187, 31, 37));
         setGunColor(new Color(255, 235, 143));
@@ -62,6 +64,10 @@ public class Alpha5 extends AdvancedRobot {
             // Tell the game we will want to move ahead 40000 -- some large number
             setAhead(40000);
             
+            //vira a arma enquanto anda
+            setTurnGunLeft(100);
+            execute();     
+            
             xPos = getX();
             yPos = getY();
             execute();
@@ -85,38 +91,17 @@ public class Alpha5 extends AdvancedRobot {
             }
             else{
                 if (virandoDireita == false){//significa q a ultima curva foi para esquerda
-                    setTurnRight(r.nextInt(50));
-                    waitFor(new TurnCompleteCondition(this));
+                   setTurnRight(r.nextInt(90));
+                   execute();
                     virandoDireita = true;
                 }
                 else{//significa q a ultima curva foi para direita
-                    setTurnLeft(r.nextInt(50));
-                    waitFor(new TurnCompleteCondition(this));
+                    setTurnLeft(r.nextInt(90));
+                    execute();
                     virandoDireita = false;
                 }
-            }
-            
+            }            
             movingForward = true;
-            // Tell the game we will want to turn right 90
-            /*setTurnRight(90);
-            // At this point, we have indicated to the game that *when we do something*,
-            // we will want to move ahead and turn right.  That's what "set" means.
-            // It is important to realize we have not done anything yet!
-            // In order to actually move, we'll want to call a method that
-            // takes real time, such as waitFor.
-            // waitFor actually starts the action -- we start moving and turning.
-            // It will not return until we have finished turning.
-            waitFor(new TurnCompleteCondition(this));
-            // Note:  We are still moving ahead now, but the turn is complete.
-            // Now we'll turn the other way...
-            setTurnLeft(180);
-            // ... and wait for the turn to finish ...
-            waitFor(new TurnCompleteCondition(this));
-            // ... then the other way ...
-            setTurnRight(180);
-            // .. and wait for that turn to finish.
-            waitFor(new TurnCompleteCondition(this));
-            // then back to the top to do it all again*/
         }
     }
 
@@ -133,7 +118,7 @@ public class Alpha5 extends AdvancedRobot {
         stop(); 
         setTurnRight(120);
         waitFor (new TurnCompleteCondition(this));
-        ahead(100);                                
+        ahead(100); 
     }    
     /**
      * reverseDirection: Switch from ahead to back & vice versa
@@ -152,7 +137,7 @@ public class Alpha5 extends AdvancedRobot {
      * onScannedRobot: Fire!
      */
     public void onScannedRobot(ScannedRobotEvent e) {
-        fire(500.00);
+        setFire(1000 / e.getDistance()); // a força depende da distancia
         System.out.println("Fire! Energy: " + getEnergy());
     }
 
@@ -160,10 +145,10 @@ public class Alpha5 extends AdvancedRobot {
      * onHitRobot: Back up!
      */
     public void onHitRobot(HitRobotEvent e) {
-        // If we're moving the other robot, reverse!
-        if (e.isMyFault()) {
-            reverseDirection();
-        }
+        setTurnGunRight(getHeading() - getGunHeading() + e.getBearing());
+        waitFor (new GunTurnCompleteCondition(this));
+        fire(500);
+        retornar();
         System.out.println("Hit robot! Energy: " + getEnergy());
     }
     
@@ -171,6 +156,8 @@ public class Alpha5 extends AdvancedRobot {
      * onHitByBullet: Turn perpendicular to the bullet, and move a bit.
      */
     public void onHitByBullet(HitByBulletEvent e) {
-        System.out.println("Ouch! I get shot! Energy: " + getEnergy());
+        setTurnGunRight(getHeading() - getGunHeading() + e.getBearing());
+        waitFor (new GunTurnCompleteCondition(this));
+        fire(500);
     }
 }
