@@ -30,6 +30,8 @@ public class Alpha5 extends AdvancedRobot {
 
     boolean movingForward;
     boolean virandoDireita; // TRUE virou para direita, FALSE virou para esquerda
+    boolean girarRadarEsquerda;
+    int contadorTiro;
     Random r = new Random();
     
     /**
@@ -47,6 +49,11 @@ public class Alpha5 extends AdvancedRobot {
         System.out.println("Esse é um AdvancedRobot. Energy inicial: " + getEnergy());
         
         virandoDireita = true; //seta a variavel
+        //se nao acertar ninguem ele vai girar para direita e vice-versa
+        setTurnGunLeft(100);
+        execute();
+        girarRadarEsquerda = true; 
+        
         
         //variaveis para determinar a posição do robo (x,y) no campo de batalha
         double xPos; 
@@ -63,9 +70,9 @@ public class Alpha5 extends AdvancedRobot {
         while (true) {
             // Tell the game we will want to move ahead 40000 -- some large number
             setAhead(40000);
-            
-            //vira a arma enquanto anda
-            setTurnGunLeft(100);
+            System.out.println("Contar tiro:" + contadorTiro);
+            //controla a direção do radar
+            controlarArma();
             execute();     
             
             xPos = getX();
@@ -93,7 +100,7 @@ public class Alpha5 extends AdvancedRobot {
                 if (virandoDireita == false){//significa q a ultima curva foi para esquerda
                    setTurnRight(r.nextInt(90));
                    execute();
-                    virandoDireita = true;
+                   virandoDireita = true;
                 }
                 else{//significa q a ultima curva foi para direita
                     setTurnLeft(r.nextInt(90));
@@ -101,7 +108,6 @@ public class Alpha5 extends AdvancedRobot {
                     virandoDireita = false;
                 }
             }            
-            movingForward = true;
         }
     }
 
@@ -114,12 +120,40 @@ public class Alpha5 extends AdvancedRobot {
         //reverseDirection();
         System.out.println("Hit wall! Energy: " + getEnergy());
     }
+    
     public void retornar(){
         stop(); 
         setTurnRight(120);
         waitFor (new TurnCompleteCondition(this));
-        ahead(100); 
+        ahead(120); 
     }    
+    
+    public void controlarArma(){
+        if (contadorTiro > 5){
+            if (girarRadarEsquerda == true){
+                setTurnGunRight(100);
+                execute();
+                girarRadarEsquerda = false;
+                contadorTiro = 0;
+            }
+            else{
+                setTurnGunLeft(100);
+                execute();
+                girarRadarEsquerda = true;   
+                contadorTiro = 0;
+            }
+        }
+        else{
+            if (girarRadarEsquerda == true){
+                setTurnGunLeft(100);                
+                execute();
+            }
+            else{
+                setTurnGunRight(100);
+                execute();           
+            }
+        }
+    }
     /**
      * reverseDirection: Switch from ahead to back & vice versa
      */
@@ -132,23 +166,29 @@ public class Alpha5 extends AdvancedRobot {
             movingForward = true;
         }
     }
+    
+    public void onBulletHit(BulletHitEvent e){
+        contadorTiro = 0;
+    }
 
     /**
      * onScannedRobot: Fire!
      */
     public void onScannedRobot(ScannedRobotEvent e) {
-        setFire(1000 / e.getDistance()); // a força depende da distancia
-        System.out.println("Fire! Energy: " + getEnergy());
+        setFire(600 / e.getDistance()); // a força depende da distancia
+        // sempre que atirar vai contar a qantidade de tiros,
+        // se der 5 tiros sem acertar ninguém, o radar vai virar ao contrário.
+        contadorTiro++;        
     }
 
     /**
-     * onHitRobot: Back up!
+     * onHitRobot: vira !
      */
     public void onHitRobot(HitRobotEvent e) {
         setTurnGunRight(getHeading() - getGunHeading() + e.getBearing());
         waitFor (new GunTurnCompleteCondition(this));
         fire(500);
-        retornar();
+        back(50);
         System.out.println("Hit robot! Energy: " + getEnergy());
     }
     
